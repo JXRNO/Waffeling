@@ -16,7 +16,7 @@ jobs:
       - name: Checkout private repo (script only)
         uses: actions/checkout@v4
         with:
-          repository: jxrno/dicsord-c
+          repository: jxrno/discord-c
           token: ${{ secrets.PRIVATE_REPO_TOKEN }}
           path: private-repo
 
