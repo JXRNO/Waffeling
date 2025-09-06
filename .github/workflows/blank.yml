@@ -18,7 +18,7 @@ jobs:
         with:
           repository: jxrno/discord-c
           token: ${{ secrets.PRIVATE_REPO_TOKEN }}
-          path: private-repo
+          path: discord-c
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -27,7 +27,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd private-repo
+          cd discord-c
           npm install axios
 
       - name: Run script
