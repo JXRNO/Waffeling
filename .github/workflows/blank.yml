@@ -41,5 +41,5 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
           git add checked.json valid.json
-          git commit -m "update usernames [skip ci]" || echo "No changes to commit"
+          git commit -m "update usernames" || echo "No changes to commit"
           git push
