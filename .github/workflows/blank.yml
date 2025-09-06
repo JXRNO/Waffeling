@@ -1,36 +1,45 @@
-# This is a basic workflow to help you get started with Actions
+name: check
 
-name: CI
-
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
-  # Allows you to run this workflow manually from the Actions tab
+    branches: [ main ]
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  run-checker:
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
+      - name: Checkout public repo
+        uses: actions/checkout@v4
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+      - name: Checkout private repo (script only)
+        uses: actions/checkout@v4
+        with:
+          repository: jxrno/dicsord-c
+          token: ${{ secrets.PRIVATE_REPO_TOKEN }}
+          path: private-repo
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          cd private-repo
+          npm install axios
+
+      - name: Run script
+        run: |
+          node discord-c/script.js || echo "Script exited"
+
+      - name: Commit and push results
+        if: success() || failure()
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add checked.json valid.json
+          git commit -m "update usernames [skip ci]" || echo "No changes to commit"
+          git push
