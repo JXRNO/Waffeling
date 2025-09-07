@@ -2,16 +2,18 @@ name: check
 
 on:
   push:
-    branches: [ main ]
-  workflow_dispatch:
+    branches:
+      - main
 
 jobs:
   run-checker:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout public repo
+      - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PRIVATE_REPO_TOKEN }} # `GH_PAT` is a secret that contains your PAT
 
       - name: Checkout private repo (script only)
         uses: actions/checkout@v4
